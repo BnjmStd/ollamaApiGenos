@@ -1,0 +1,26 @@
+# singularity_files/ollama.def
+Bootstrap: docker
+From: ubuntu:20.04
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+    export OLLAMA_HOST=0.0.0.0
+    export OLLAMA_PORT=11434
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    export TZ=UTC
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
+    echo $TZ > /etc/timezone
+    apt-get update && apt-get install -y curl ca-certificates openssl
+    rm -rf /var/lib/apt/lists/*
+    cd /usr/local/bin
+    curl -L https://github.com/ollama/ollama/releases/download/v0.1.27/ollama-linux-amd64 -o ollama
+    chmod +x ollama
+    update-ca-certificates
+
+%startscript
+    ollama serve --host 0.0.0.0:11434
+
+%runscript
+    exec ollama "$@"
