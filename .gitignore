@@ -6,3 +6,4 @@ ollama.sif
 .env
 api/results
 api/test_files
+chat/guides

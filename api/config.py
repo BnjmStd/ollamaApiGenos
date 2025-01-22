@@ -5,12 +5,11 @@ from functools import lru_cache
 import json
 
 class Settings(BaseSettings):
-    # API Settings
+    # Mantener configuraciones existentes pero remover referencias al chat
     API_TITLE: str = "Medical Exam Processing API"
     API_DESCRIPTION: str = "API para procesar y analizar exámenes médicos"
     API_VERSION: str = "1.0.0"
     
-    # Server Settings
     SERVER_HOST: str = "0.0.0.0"
     SERVER_PORT: int = 8000
     SERVER_WORKERS: int = 8
@@ -18,28 +17,22 @@ class Settings(BaseSettings):
     SERVER_MAX_REQUESTS: int = 1000
     SERVER_LIMIT_CONCURRENCY: int = 100
     
-    # Directories
     BASE_DIR: Path = Path(__file__).parent
-    RESULTS_DIR: Path = Path(__file__).parent / "results"
-    TEMP_DIR: Path = Path(__file__).parent / "temp"
-    LOG_FILE: Path = Path(__file__).parent / "logs" / "api.log"
+    RESULTS_DIR: Path = BASE_DIR / "results"
+    TEMP_DIR: Path = BASE_DIR / "temp"
+    LOG_FILE: Path = BASE_DIR / "logs" / "api.log"
     
-    # CORS - valor por defecto como string JSON
     ALLOWED_ORIGINS: List[str] = ["http://localhost:3000"]
+    MAX_FILE_SIZE: int = 10 * 1024 * 1024
+    PROCESS_TIMEOUT: int = 300
     
-    # Límites y Timeouts
-    MAX_FILE_SIZE: int = 10 * 1024 * 1024  # 10MB
-    PROCESS_TIMEOUT: int = 300  # 5 minutos
-    
-    # Rate Limiting Settings
     RATE_LIMIT_PER_MINUTE: int = 100
-    RATE_LIMIT_PER_IP: int = 1000  # límite por IP por hora
-    RATE_LIMIT_WINDOW: int = 3600   # ventana de tiempo en segundos (1 hora)
-    MAX_CONCURRENT_REQUESTS: int = 50  # máximo de solicitudes concurrentes
+    RATE_LIMIT_PER_IP: int = 1000
+    RATE_LIMIT_WINDOW: int = 3600
+    MAX_CONCURRENT_REQUESTS: int = 50
     
-    # Memory Management
-    MAX_MEMORY_USAGE: int = 1024 * 1024 * 1024  # 1GB en bytes
-    CLEANUP_INTERVAL: int = 300  # limpieza cada 5 minutos
+    MAX_MEMORY_USAGE: int = 1024 * 1024 * 1024
+    CLEANUP_INTERVAL: int = 300
     
     class Config:
         env_file = ".env"

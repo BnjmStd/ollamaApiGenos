@@ -1,18 +1,20 @@
-# chat/services.py
 import httpx
 import json
 from loguru import logger
 import time
-from .monitoring import ResourceMonitor
+from core.monitoring import ResourceMonitor
+from core.config import get_settings
 
 class OllamaService:
     def __init__(self):
-        self.base_url = "http://localhost:11434"
+        self.settings = get_settings()
+        self.base_url = self.settings.OLLAMA_URL
         self.client = httpx.AsyncClient(
-            timeout=httpx.Timeout(60.0, connect=5.0),
-            limits=httpx.Limits(max_keepalive_connections=20, max_connections=100)
+            timeout=httpx.Timeout(self.settings.CONNECTION_TIMEOUT, connect=5.0),
+            limits=httpx.Limits(max_keepalive_connections=20, max_connections=self.settings.MAX_CONNECTIONS)
         )
         self.monitor = ResourceMonitor()
+        self.monitor.requests_per_minute = self.settings.RATE_LIMIT_PER_MIN
 
     async def check_ollama_status(self) -> bool:
         try:
@@ -30,24 +32,18 @@ class OllamaService:
                 self.monitor.increment_error()
                 return "Has excedido el límite de solicitudes por minuto. Por favor, espera un momento."
 
-            # Preparar prompt
-            prompt = ""
-            if context:
-                prompt = f"Contexto del documento:\n{context}\n\nPregunta: {question}"
-            else:
-                prompt = f"Pregunta: {question}"
-
+            prompt = f"""Responde basándote en el siguiente contexto. Se breve y conciso: Contexto: {context} Pregunta: {question}"""
             logger.info(f"Enviando prompt a Ollama: {prompt[:100]}...")
 
             try:
                 response = await self.client.post(
                     f"{self.base_url}/api/generate",
                     json={
-                        "model": "llama2",
+                        "model": self.settings.OLLAMA_MODEL,
                         "prompt": prompt,
                         "stream": False
                     },
-                    timeout=httpx.Timeout(60.0, connect=5.0)
+                    timeout=httpx.Timeout(self.settings.CONNECTION_TIMEOUT, connect=5.0)
                 )
             except httpx.TimeoutException:
                 self.monitor.increment_error()

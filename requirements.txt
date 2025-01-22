@@ -26,9 +26,11 @@ idna==3.10
 idna-ssl==1.1.0
 immutables==0.19
 importlib-metadata==4.8.3
+joblib==1.1.1
 loguru==0.7.3
 more-itertools==7.2.0
 multidict==5.2.0
+numpy==1.19.5
 pdfminer.six==20211012
 pdfplumber==0.6.0
 Pillow==8.4.0
@@ -44,9 +46,12 @@ python-multipart==0.0.5
 PyYAML==5.4.1
 requests==2.27.1
 rfc3986==1.5.0
+scikit-learn==0.24.2
+scipy==1.5.4
 six==1.17.0
 sniffio==1.2.0
 starlette==0.14.2
+threadpoolctl==3.1.0
 tomlkit==0.5.11
 typing-extensions==3.10.0.2
 urllib3==1.26.20

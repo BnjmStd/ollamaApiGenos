@@ -1,4 +1,4 @@
-# chat/monitoring.py
+# chat/core/monitoring.py
 import psutil
 from typing import Dict
 import time
