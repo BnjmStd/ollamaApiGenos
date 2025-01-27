@@ -32,7 +32,6 @@ app.include_router(ws_router)
 @app.on_event("startup")
 async def startup_event():
    # Inicializar servicios
-   Path("guides").mkdir(exist_ok=True)
    logger.info("Chat service initialized")
 
 @app.on_event("shutdown")

@@ -33,7 +33,14 @@ class OllamaService:
                 return "Has excedido el límite de solicitudes por minuto. Por favor, espera un momento."
 
             prompt = f"""Responde basándote en el siguiente contexto. Se breve y conciso: Contexto: {context} Pregunta: {question}"""
-            logger.info(f"Enviando prompt a Ollama: {prompt[:100]}...")
+            # Logging detallado
+            logger.info("=== INICIO PROMPT ===")
+            logger.info(f"Pregunta original: {question}")
+            logger.info("Contexto completo:")
+            logger.info(context if context else "Sin contexto")
+            logger.info("Prompt final:")
+            logger.info(prompt)
+            logger.info("=== FIN PROMPT ===")
 
             try:
                 response = await self.client.post(
